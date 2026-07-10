@@ -26,9 +26,9 @@ class MultiMethod:
                 continue
             if parm.annotation is _empty:
                 raise TypeError(f"{name} all parameters must be annotated")
-            _types = _types + (parm.annotation,)
             if parm.default is not _empty:
                 self.methods[_types] = func
+            _types = _types + (parm.annotation,)
         self.methods[_types] = func
 
     def __call__(self, *args, **kwds) -> Any:
