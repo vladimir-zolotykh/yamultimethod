@@ -62,11 +62,11 @@ class MultiMeta(type):
 
 class Visit(metaclass=MultiMeta):
     def add(self, x: int, y: int) -> int:
-        print(f"add-int-int({x}, {y}")
+        print(f"add-int-int({x}, {y})")
         return x + y
 
     def add(self, x: str, y: str) -> str:  # noqa: F81
-        print(f"add-str-str({x}, {y}")
+        print(f"add-str-str({x}, {y})")
         return x + y
 
     def add(self, x: float, y: float = 2.3) -> float:  # noqa: F81
