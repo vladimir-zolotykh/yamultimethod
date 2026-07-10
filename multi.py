@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import MutableMapping, Any, Callable
 from types import MethodType
+from functools import wraps
 from inspect import signature, _empty
 
 
@@ -60,17 +61,35 @@ class MultiMeta(type):
         return MultiDict()
 
 
+def log_types(func):
+    @wraps(func)
+    def wrapper(*args, **kwds):
+        sig = signature(func)
+        fname = func.__name__
+        dashed = "-".join(
+            parm.annotation.__name__
+            for name, parm in sig.parameters.items()
+            if name != "self"
+        )
+        sargs = ", ".join(str(a) for a in args[1:])
+        print(f"{fname}-{dashed}({sargs})")
+        res = func(*args, **kwds)
+        return res
+
+    return wrapper
+
+
 class Visit(metaclass=MultiMeta):
+    @log_types
     def add(self, x: int, y: int) -> int:
-        print(f"add-int-int({x}, {y})")
         return x + y
 
+    @log_types
     def add(self, x: str, y: str) -> str:  # noqa: F81
-        print(f"add-str-str({x}, {y})")
         return x + y
 
+    @log_types
     def add(self, x: float, y: float = 2.3) -> float:  # noqa: F81
-        print(f"add-float-float({x}, {y})")
         return x + y
 
 
