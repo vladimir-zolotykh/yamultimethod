@@ -27,11 +27,13 @@ class MultiMethod:
             if parm.annotation is _empty:
                 raise TypeError(f"{name} all parameters must be annotated")
             _types = _types + (parm.annotation,)
+            if parm.default is not _empty:
+                self.methods[_types] = func
         self.methods[_types] = func
 
     def __call__(self, *args, **kwds) -> Any:
-        _types: tuple[type, ...] = (type(a) for a in args[1:])
-        return self.methods[_types](args)
+        _types: tuple[type, ...] = tuple(type(a) for a in args[1:])
+        return self.methods[_types](*args)
 
 
 class MultiDict(dict):
